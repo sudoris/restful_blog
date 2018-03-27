@@ -1,0 +1,24 @@
+i.icon {
+    font-size: 1.5em;
+}
+
+.container.main {
+    margin-top: 7.0em;
+}
+
+#delete {
+    display: inline;
+}
+
+/*.item {
+	min-width: 800px;
+}*/
+
+/*.bottom-spacing {
+	min-height: 10px;
+}*/
+
+.ui.main.text.container {
+	margin-bottom: 10px;
+	
+}
