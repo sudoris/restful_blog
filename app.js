@@ -116,15 +116,29 @@ app.get("/blogs/:id", function(req, res) {
 // EDIT ROUTE
 app.get("/blogs/:id/edit", function(req, res){
 
-
-
-    Blog.findById(req.params.id, function(err, foundBlog) {
-        if(err) {
-            res.redirect("/blogs");
-        } else {
-            res.render("edit", {blog: foundBlog})
+    // check if user is logged in
+    if(req.isAuthenticated()) {
+      Blog.findById(req.params.id, function(err, foundBlog) {
+          if(err) {
+              res.redirect("/blogs");
+          } else {
+            
+              if(foundBlog.author.id.equals(req.user._id)) {
+                  res.render("edit", {blog: foundBlog})
+              } else {
+                  res.send("You do not have permission to do that");
+              }
+              
         }
-    });
+      });
+    } else { // if not, redirect
+        res.send("you needed to be logged in to do that");
+    }
+        
+    
+
+
+    
 
 
 });
