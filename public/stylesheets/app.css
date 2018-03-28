@@ -22,3 +22,11 @@ i.icon {
 	margin-bottom: 10px;
 	
 }
+
+#login-form-container {
+	max-width: 30% !important;
+}
+
+#register-form-container {
+	max-width: 30% !important;
+}
