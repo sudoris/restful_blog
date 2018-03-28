@@ -65,13 +65,13 @@ app.get("/blogs", function(req, res) {
 });
 
 // NEW ROUTE
-app.get("/blogs/new", function(req, res) {
+app.get("/blogs/new", isLoggedIn, function(req, res) {
    res.render("new");
 });
 
 
 // CREATE ROUTE
-app.post("/blogs", function(req,res) {
+app.post("/blogs", isLoggedIn, function(req,res) {
 
    // sanitize input
    req.body.blog.body = req.sanitize(req.body.blog.body);
@@ -183,6 +183,14 @@ app.post("/login", passport.authenticate("local",
   }), function(req, res) {
   
 });
+
+// middleware
+function isLoggedIn(req, res, next) {
+  if(req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect("/login");
+}
 
 app.listen(app.get('port'), function(){
   console.log('App started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
