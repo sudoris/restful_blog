@@ -1,5 +1,7 @@
 var express = require("express");
 var app = express();
+var mongoose = require("mongoose");
+var passport = require('passport');
 var LocalStrategy = require("passport-local");
 
 var bodyParser = require("body-parser");
@@ -7,8 +9,7 @@ var methodOverride = require("method-override");
 
 var expressSanitizer = require("express-sanitizer");
 var User = require("./models/user");
-
-var mongoose = require("mongoose");
+var Blog = require("./models/blog");
 
 
 mongoose.connect("mongodb://localhost/blog_test");
@@ -21,15 +22,21 @@ app.use(expressSanitizer());
 app.use(methodOverride("_method"));
 app.set('port', 3000);
 
-// MONGOOSE/MODEL CONFIG
-var blogSchema = new mongoose.Schema({
-    title: String,
-    image: String,
-    body: String,
-    created: {type: Date, default: Date.now}
-});
+// PASSPORT CONFIGURATION
+app.use(require("express-session")({
+    secret: "SuperSecretWord",
+    resave: false,
+    saveUninitialized: false
+}));
 
-var Blog = mongoose.model("Blog", blogSchema);
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
+
 
 // Blog.create({
 //   title: "Test post",
@@ -136,9 +143,25 @@ app.delete("/blogs/:id", function(req, res) {
    });
 });
 
-// app.listen(process.env.PORT, process.env.IP, function() {
-//    console.log("success");
-// });
+// AUTH ROUTES
+
+// show register form
+app.get("/register", function(req, res) {
+  res.render("register");
+});
+
+app.post("/register", function(req, res) {
+  var newUser = new User({username: req.body.username});
+  User.register(newUser, req.body.password, function(err, user) {
+    if(err) {
+      console.log(err);
+      return res.render("register");
+    }
+    passport.authenticate("local")(req, res, function() {
+      res.redirect("/blogs");
+    });
+  });
+});
 
 app.listen(app.get('port'), function(){
   console.log('App started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
