@@ -83,7 +83,17 @@ app.post("/blogs", isLoggedIn, function(req,res) {
        if(err) {
            res.render("new");
        } else {
-           // redirect to index if new post created successfully
+           // new post created successfully
+           // add username and id to blog
+           console.log("post created by" + req.user.username);
+           //save 
+           newBlog.author.id = req.user._id;
+           newBlog.author.username = req.user.username;
+           newBlog.save();
+
+           console.log(newBlog);
+
+           // redirect to index 
            res.redirect("/blogs");
        }
    });
