@@ -1,11 +1,12 @@
 var express = require("express");
 var app = express();
+var LocalStrategy = require("passport-local");
 
 var bodyParser = require("body-parser");
 var methodOverride = require("method-override");
 
 var expressSanitizer = require("express-sanitizer");
-
+var User = require("./models/user");
 
 var mongoose = require("mongoose");
 
