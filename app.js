@@ -55,12 +55,31 @@ app.get("/", function(req, res) {
 
 // INDEX ROUTE
 app.get("/blogs", function(req, res) {
+    // documentation on sorting mongodb query results 
+    // https://docs.mongodb.com/manual/reference/method/cursor.sort/
+
+    // stackoverflow response to sorting mongodb query results with node.js
+    // https://stackoverflow.com/questions/5825520/in-mongoose-how-do-i-sort-by-date-node-js/15081087#15081087
 
     Blog.find({}, function(err, blogs) {
        if(err) {
            console.log("Error!");
        } else {
-           res.render("index", {blogs: blogs});
+
+
+          // console.log("======= before sort ==========")
+          // console.log(blogs);
+
+          // console.log("======= after ======== ");
+
+          // console.log(blogs.sort([['date', 1]]));
+
+          console.log(blogs.sort(function(a, b) {
+            return b.created - a.created;
+          }));
+
+
+          res.render("index", {blogs: blogs});
        }
     });
 
