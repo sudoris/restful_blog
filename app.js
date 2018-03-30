@@ -114,37 +114,17 @@ app.get("/blogs/:id", function(req, res) {
 });
 
 // EDIT ROUTE
-app.get("/blogs/:id/edit", function(req, res){
-
-    // check if user is logged in
-    if(req.isAuthenticated()) {
-      Blog.findById(req.params.id, function(err, foundBlog) {
-          if(err) {
-              res.redirect("/blogs");
-          } else {
-            
-              if(foundBlog.author.id.equals(req.user._id)) {
-                  res.render("edit", {blog: foundBlog})
-              } else {
-                  res.send("You do not have permission to do that");
-              }
-              
-        }
-      });
-    } else { // if not, redirect
-        res.send("you needed to be logged in to do that");
-    }
-        
-    
-
+app.get("/blogs/:id/edit", checkBlogOwnership, function(req, res){
 
     
-
-
+    Blog.findById(req.params.id, function(err, foundBlog) {   
+        res.render("edit", {blog: foundBlog}); 
+    });      
+     
 });
 
 // UPDATE ROUTE
-app.put("/blogs/:id", function(req, res) {
+app.put("/blogs/:id", checkBlogOwnership, function(req, res) {
 
     req.body.blog.body = req.sanitize(req.body.blog.body);
 
@@ -159,7 +139,7 @@ app.put("/blogs/:id", function(req, res) {
 
 
 // DELETE ROUTE
-app.delete("/blogs/:id", function(req, res) {
+app.delete("/blogs/:id", checkBlogOwnership, function(req, res) {
    Blog.findByIdAndRemove(req.params.id, function(err) {
       if(err) {
           res.redirect("/blogs");
@@ -210,13 +190,38 @@ app.post("/login", passport.authenticate("local",
   
 });
 
-// middleware
+// middleware authenticate user
 function isLoggedIn(req, res, next) {
   if(req.isAuthenticated()) {
     return next();
   }
   res.redirect("/login");
 }
+
+//middleware to authenticate and authorize user
+function checkBlogOwnership(req, res, next) {
+  if(req.isAuthenticated()) {
+      Blog.findById(req.params.id, function(err, foundBlog) {
+          if(err) {
+              res.redirect("back");
+          } else {
+
+              if(foundBlog.author.id.equals(req.user._id)) {
+                  next();
+              } else {
+                  res.redirect("back");
+              }
+              
+        }
+      });
+    } else { // if not, redirect
+        console.log("You are not currently logged in");
+        res.redirect("back");
+    }
+}
+
+
+
 
 app.listen(app.get('port'), function(){
   console.log('App started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');

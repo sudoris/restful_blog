@@ -13,14 +13,16 @@
             <div class="description">
                 <p><%- blog.body %></p>
             </div>
-            
-            
+
+            <!-- below comparison can also be done using using: blog.author.id.equals(req.user._id) -->           
+            <% if(currentUser && blog.author.id.toString() === currentUser._id.toString()) { %>
+                <a class="ui violet basic button" href="/blogs/<%= blog._id %>/edit">Edit</a>
                 
-            <a class="ui violet basic button" href="/blogs/<%= blog._id %>/edit">Edit</a>
+                <form id="delete" method="POST" action="/blogs/<%= blog._id %>?_method=DELETE" >
+                    <button class="ui red basic button">Delete</button>
+                </form>
+            <% } %>   
             
-            <form id="delete" method="POST" action="/blogs/<%= blog._id %>?_method=DELETE" >
-                <button class="ui red basic button">Delete</button>
-            </form>
             
             
         </div>
