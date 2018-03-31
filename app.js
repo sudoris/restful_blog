@@ -25,7 +25,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressSanitizer());
 
 app.use(methodOverride("_method"));
-app.set('port', 3000);
+// app.set('port', 3000);
+var port = process.env.PORT || 8080;
+
 
 // PASSPORT CONFIGURATION
 app.use(require("express-session")({
@@ -270,8 +272,12 @@ function checkBlogOwnership(req, res, next) {
 
 
 
-app.listen(app.get('port'), function(){
-  console.log('App started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
+// app.listen(app.get('port'), function(){
+//   console.log('App started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
+// });
+
+app.listen(port, function() {
+    console.log('App started on http://localhost:' + port);
 });
 
 
