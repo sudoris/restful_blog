@@ -30,3 +30,32 @@ i.icon {
 #register-form-container {
 	max-width: 30% !important;
 }
+
+
+/*.ui.fixed.inverted.menu:after { 
+   content: "."; 
+   visibility: hidden; 
+   display: block; 
+   height: 0; 
+   clear: both;
+}*/
+
+/*.ui.message.orange {
+	max-width: 60%;
+	margin-top: 55px !important;
+	margin-right: auto;
+	margin-left: auto;
+}*/
+
+.flash-message-container {
+	max-width: 60%;
+	margin-top: 60px !important;
+	margin-right: auto;
+	margin-left: auto;
+	margin-bottom: 0;
+}
+
+footer {
+	min-height: 20px;
+	display: block;
+}

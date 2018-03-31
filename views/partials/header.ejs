@@ -28,6 +28,26 @@
                 
             </div>
            
+        </div>       
+        
+        
+
+    <div class="flash-message-container">
+        <% if (error.length > 0) { %>
+        <div class="ui message orange">
+            <div class="header">
+                <%= error %>
+            </div>  
         </div>
+        <% } else if (success.length > 0) { %>
+
+        <div class="ui message green">
+            <div class="header">
+                <%= success %>
+            </div>  
+        </div>
+        <% } %>  
+    </div>
+         
         
        
